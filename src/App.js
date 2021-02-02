@@ -1,7 +1,7 @@
 import './App.css';
 import React from "react";
 import Homepage from './Pages/Homepage/Homepage';
-import {Switch,Route} from "react-router-dom";
+import {Switch,Route,Redirect} from "react-router-dom";
 import Shop from './Pages/Shop/Shop';
 import Header from './Components/Header/Header';
 import SignInAndSignUp from './Pages/Sign-In-And-Sign-Up-Page/SignInAndSignUp';
@@ -16,16 +16,13 @@ import { setCurrentUser } from "./Redux/User/userActions";
 class App extends React.Component {
 
   unSubscribeFromAuth = null;
-
- 
-
   componentWillUnmount(){
     this.unSubscribeFromAuth();
   }
 
   componentDidMount(){
     const {setCurrentUser} = this.props;
-   this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+    this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth){
         const userRef = await createUserProfileData(userAuth);
         await userRef.onSnapshot(snapshot => {
@@ -34,9 +31,9 @@ class App extends React.Component {
             ...snapshot.data()
           })
         })
-        setCurrentUser(userAuth)
       }
-    })  
+      setCurrentUser(userAuth)
+    });
   }
   render(){
     return (
@@ -45,7 +42,7 @@ class App extends React.Component {
         <Switch>
           <Route exact={true} component={Homepage} path="/"/>  
           <Route exact={true} component={Shop} path="/shop" />
-          <Route exact={true} component={SignInAndSignUp} path="/signIn" />
+          <Route exact={true} path="/signIn" render={()=>this.props.currentUser ? (<Redirect to='/'/>) : (<SignInAndSignUp/>)} />
         </Switch>
       </div>
     );
@@ -58,5 +55,7 @@ const mapDispatchToProps = dispatch =>({
     setCurrentUser(user)
   )
 })
-
-export default connect(null,mapDispatchToProps)(App);
+const mapStateToProps = state => ({
+  currentUser:state.user.currentUser
+})
+export default connect(mapStateToProps,mapDispatchToProps)(App);
