@@ -18,6 +18,35 @@ provider.setCustomParameters({prompt:'select_account'});
 export const signInWithGoogle = ()=> auth.signInWithPopup(provider);
 
 
+export const addCollectionAndItems =async (collectionKey,objectsToAdd ) => {
+  const collectionRef = firestore.collection(collectionKey);
+  const batch = firestore.batch(); //multiple request at same time if one fail whole updates failed
+  objectsToAdd.forEach(obj =>{
+    const newDocRef =  collectionRef.doc(obj.title); 
+    batch.set(newDocRef,obj); //adding requests to the batch
+  });
+  
+ return await batch.commit();
+}
+
+export const convertCollectionSnapshotToMap=(collections) =>{
+  const transformedCollection  = collections.docs.map(doc =>{
+    const {title,items} = doc.data();
+    return {
+       routeName: encodeURI(title.toLowerCase()),
+       id:doc.id,
+       title,
+       items
+
+    } 
+  })
+ return transformedCollection.reduce((accumlator,collection)=>{
+   accumlator[collection.title.toLowerCase()] = collection;
+   return accumlator;
+ },{})
+
+}
+
 export const createUserProfileData = async (userAuth,additionalData)=>{
   if(!userAuth) return;
   const userRef =await firestore.doc(`users/${userAuth.uid}`)

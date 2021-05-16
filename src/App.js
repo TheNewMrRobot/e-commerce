@@ -10,6 +10,8 @@ import { createUserProfileData } from "./firebase/firebase.utils";
 import { connect } from "react-redux";
 import { setCurrentUser } from "./Redux/User/userActions";
 import Checkout from './Pages/Checkout/Checkout';
+import {selectUserDetails} from "./Redux/User/userSelector"
+import { createStructuredSelector } from 'reselect';
 
 
 
@@ -22,6 +24,7 @@ class App extends React.Component {
   }
 
   componentDidMount(){
+    // collectionsArray
     const {setCurrentUser} = this.props;
     this.unSubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if(userAuth){
@@ -34,6 +37,7 @@ class App extends React.Component {
         })
       }
       setCurrentUser(userAuth)
+      // addCollectionAndItems("collections",collectionsArray.map(({title,items})=>({title,items})))
     });
   }
   render(){
@@ -57,7 +61,7 @@ const mapDispatchToProps = dispatch =>({
     setCurrentUser(user)
   )
 })
-const mapStateToProps = state => ({
-  currentUser:state.user.currentUser
+const mapStateToProps =createStructuredSelector({
+    currentUser:selectUserDetails,
 })
 export default connect(mapStateToProps,mapDispatchToProps)(App);
