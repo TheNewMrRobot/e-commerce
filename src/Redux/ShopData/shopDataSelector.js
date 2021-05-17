@@ -18,4 +18,14 @@ export const selectRoutePath = collectionParamUrl => createSelector(
     collections => (collections ? collections[collectionParamUrl] : null)
 )
 
+export const selectIsCollectionFetching = createSelector(
+    [shopData],
+    shop => shop.isFetching
+)
+
+export const selectIsCollectionLoaded = createSelector(
+    [shopData],
+    shop => !!shop.SHOP_DATA
+)
+
 export default selectShopData;

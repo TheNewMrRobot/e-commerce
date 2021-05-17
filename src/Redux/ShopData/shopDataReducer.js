@@ -1,7 +1,10 @@
 import ShopActionTypes from "./shop.type";
 
 const INITIAL_STATE = {
-    SHOP_DATA:null
+    SHOP_DATA:null,
+    isFetching:false,
+    errorMessage:undefined
+
 }
 
 const shopDataReducer = (state=INITIAL_STATE,action)=>{
@@ -10,6 +13,24 @@ const shopDataReducer = (state=INITIAL_STATE,action)=>{
         return {
           ...state,
            SHOP_DATA:action.payload
+        }
+    case ShopActionTypes.FETCH_COLLECTIONS_START:
+        return {
+            ...state,
+            isFetching:true,
+        }
+    case ShopActionTypes.FETCH_COLLECTIONS_SUCCESS:
+        return {
+            ...state,
+            isFetching:false,
+            SHOP_DATA:action.payload
+        }
+    case ShopActionTypes.FETCH_COLLECTIONS_FAILURE:
+        return {
+            ...state,
+            isFetching:false,
+            errorMessage:action.payload
+
         }
         default:
             return{
