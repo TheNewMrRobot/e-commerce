@@ -15,11 +15,14 @@ const shopDataReducer = (state=INITIAL_STATE,action)=>{
            SHOP_DATA:action.payload
         }
     case ShopActionTypes.FETCH_COLLECTIONS_START:
+        console.log("From Reducer Start")
         return {
             ...state,
             isFetching:true,
         }
     case ShopActionTypes.FETCH_COLLECTIONS_SUCCESS:
+        console.log("From Reducer Success")
+
         return {
             ...state,
             isFetching:false,

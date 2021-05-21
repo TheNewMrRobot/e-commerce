@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import CollectionsPageContainer from "../Category/Collection.conatainer";
 import { connect } from "react-redux";
-import { fetchCollectionsStartAsync } from "../../Redux/ShopData/shop.actions";
+import { fetchCollectionsStart } from "../../Redux/ShopData/shop.actions";
 import CollectionsOverviewContainer from "../../Components/Collection-overview/collection-overview.container";
 
-const Shop = ({ match, fetchCollectionsStartAsync }) => {
+const Shop = ({ match, fetchCollectionsStart }) => {
   useEffect(() => {
-    fetchCollectionsStartAsync();
+    fetchCollectionsStart();
   }, []);
   return (
     <div className="shop-page">
@@ -27,6 +27,6 @@ const Shop = ({ match, fetchCollectionsStartAsync }) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCollectionsStartAsync: () => dispatch(fetchCollectionsStartAsync()),
+  fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 export default connect(null, mapDispatchToProps)(Shop);
